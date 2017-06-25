@@ -139,14 +139,14 @@ void sensor(Sensor sonic,int direccion){
   distance = (duration/2) / 29.1;
 
   if (distance <= 15){
+    M1.parar();
+    M2.parar();
+    tono3();
+    delay(500);
+    Serial.print("Devolverse: ");
+    Serial.print(distance);
+    Serial.println(" cm");
     if (direccion == 1){
-      Serial.print("Retroceder ");
-      Serial.print(distance);
-      Serial.println(" cm");
-      M1.parar();
-      M2.parar();
-      tono3();
-      delay(500);
       M1.atras(255);
       M2.atras(255);
       delay(1000);
@@ -155,13 +155,6 @@ void sensor(Sensor sonic,int direccion){
       delay(2000);
     }
     if (direccion == 2){
-      Serial.print("Avanzar ");
-      Serial.print(distance);
-      Serial.println(" cm");
-      M1.parar();
-      M2.parar();
-      tono3();
-      delay(500);
       M1.adelante(255);
       M2.adelante(255);
       delay(1000);
@@ -170,7 +163,6 @@ void sensor(Sensor sonic,int direccion){
       delay(2000);
     }
   }else {
-    Serial.print(" | ");
     Serial.print(distance);
     Serial.println(" cm - Todo bien");
   }
