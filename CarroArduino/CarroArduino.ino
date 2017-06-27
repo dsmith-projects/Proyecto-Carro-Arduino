@@ -5,15 +5,19 @@
 Motor M1 (13,12,11);
 Motor M2 (8,9,10);
 int LED = 7;// LED pin attached to Arduino D7 for bluetooth activity
-int incomingByte = 0;// variable to store serial data
-int speed_val = 255;// variable to store speed value
-
-//sensores
-Sensor S1(2,3);
-Sensor S2(4,5);
 
 //Parlante
 int speakerOut = 6;
+
+//sensores
+Sensor S2(4,5);
+Sensor S1(2,3);
+
+unsigned long interval= 10000; // the time we need to wait
+unsigned long previousMillis= 0; // millis() returns an unsigned long.
+bool ledState = false; // state variable for the LED
+int incomingByte = 0;// variable to store serial data
+int speed_val = 255;// variable to store speed value
 
 int demoPlay[] = {
     119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,
@@ -43,7 +47,6 @@ void setup(){
   musica1();
   M1.adelante(255);
   M2.atras(255);
-  delay(500);
 }
 
 void loop(){
@@ -58,7 +61,10 @@ void loop(){
       speed_val = 255;
       demo();
     }
-    else {
+     else if (incomingByte == 98){ // es "b" para modo autonomo
+      speed_val = 255;
+      autonomo();
+    }else {
       movimiento(incomingByte); //escoge movimiento
     }
     
@@ -123,6 +129,16 @@ void demo(){
   musica2();
   for (int i = 0; i < (sizeof(demoPlay)/2) ;i++){
     movimiento(demoPlay[i]);
+  }
+}
+
+void autonomo(){
+  unsigned long currentMillis = millis(); // grab current time
+  unsigned long previousMillis = currentMillis;
+  tono4();
+  while ((previousMillis - currentMillis) <= interval) {
+    previousMillis = millis();
+    movimiento(119);
   }
 }
 
